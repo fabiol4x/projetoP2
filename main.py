@@ -126,4 +126,5 @@ st.write('\n\n') # Pulando duas linhas
 
 st.bar_chart(df_partido, x='Partido Político', y='Quantidade', x_label='Partido Político', y_label='Proposições', width='stretch')
 
-st.write(f"*Nota: em benefício do tempo, utilizamos um período mais curto (7 dias): {dataInicio} - {dataFinal}*")
+
+st.write(f"*Nota: em benefício do tempo, utiliza-se um período mais curto (7 dias): {dataInicio} - {dataFinal}*")

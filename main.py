@@ -39,7 +39,7 @@ with st.spinner('Realizando download dos dados...'):
 # Após o download, importamos a base de dados para o contexto do código
 with st.spinner('Carregando a base de dados...'):
     df_proposicoes = pd.read_excel(f"./downloads/{file}")
-    df_proposicoes = df_proposicoes[df_proposicoes['descricaoTipo'].str.contains('Projeto de Lei|Medida Provisória|Proposta de Emenda à Constituição')]
+    df_proposicoes = df_proposicoes[df_proposicoes['descricaoTipo'].str.contains('Projeto de Lei|Proposta de Emenda à Constituição')]
 
 # Formatação da coluna "dataApresentacao", que antes também incluía horários (agora, apenas a data)
 with st.spinner('Formatando e consolidando as informações encontradas...'):
@@ -128,3 +128,4 @@ st.bar_chart(df_partido, x='Partido Político', y='Quantidade', x_label='Partido
 
 
 st.write(f"*Nota: em benefício do tempo, utiliza-se um período mais curto (7 dias): {dataInicio} - {dataFinal}*")
+

@@ -76,7 +76,7 @@ with st.spinner('Filtrando informações com base no período selecionado...'):
 
 # Implementando a verificação da existência de proposições para o período selecionado
 if df_proposicoesPeriodo.empty == True:
-   st.warning('Não foram encontradas proposições para os filtros selecionados! Isso pode ocorrer, por exemplo, quando o período pesquisado coincide com o recesso parlamentar, que se inicia no dia 23 de dezembro de cada ano e se encerra no dia 02 de fevereiro do ano seguinte. Por favor, tente alterar o marco inicial da pesquisa.', icon="⚠️")
+   st.warning('Não foram encontradas proposições para os filtros selecionados!\n\nIsso pode ocorrer, por exemplo, quando o período pesquisado coincide com o recesso parlamentar, que se inicia no dia 23 de dezembro de cada ano e se encerra no dia 02 de fevereiro do ano seguinte.\n\nPor favor, tente alterar o marco inicial da pesquisa.', icon="⚠️")
 else:
    # Construindo a visualização dos gráficos
    st.write('Com base nos filtros selecionados, é possível consolidar as seguintes informações:')
@@ -146,6 +146,7 @@ else:
    st.write(f"*Nota: em benefício do tempo, utiliza-se um período mais curto (7 dias): {dataInicio} - {dataFinal}*")
    
    
+
 
 
 

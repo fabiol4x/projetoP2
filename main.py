@@ -8,13 +8,15 @@ import streamlit as st
 
 # CSS Injection para personalizar o warning utilizado mais à frente
 st.markdown("""
-<style>
-.st-emotion-cache-1warn {
-   background-color: #FFC7CE;
-   color: #9C0006;
-}
-</style>
-""", unsafe_allow_html=True)
+   <style>
+   div[role="alert"] {
+      background-color: #FFC7CE;
+      color: #9C0006;
+   }
+   </style>
+   """,
+   unsafe_allow_html=True
+)
 
 # Título da página
 st.title('Proposições - Câmara dos Deputados')
@@ -144,6 +146,7 @@ else:
    st.write(f"*Nota: em benefício do tempo, utiliza-se um período mais curto (7 dias): {dataInicio} - {dataFinal}*")
    
    
+
 
 
 

@@ -62,70 +62,77 @@ st.write(f"Desse modo, foi definido o seguinte período de busca: {dataInicio} -
 with st.spinner('Filtrando informações com base no período selecionado...'):
     df_proposicoesPeriodo = df_proposicoes[(df_proposicoes['dataApresentacao'] >= dataInicio) & (df_proposicoes['dataApresentacao'] <= dataFim)]
 
-# Construindo a visualização dos gráficos
-st.write('Com base nos filtros selecionados, é possível consolidar as seguintes informações:')
-
-# Gráfico 1: Proposições por Semana
-st.subheader('1. Quantidade de proposições apresentadas a cada semana')
-
-df_plot = df_proposicoesPeriodo.copy()
-
-df_plot['dataApresentacao'] = pd.to_datetime(df_plot['dataApresentacao'])
-df_temp = df_plot.set_index('dataApresentacao')
-df_proposicoesSemanal = df_temp.resample('1W').size().reset_index(name='quantidade_proposicoes') # Aqui, a contagem é realizada semanalmente
-
-st.write('\n\n') # Pulando duas linhas
-
-# Gráfico de linhas
-st.line_chart(df_proposicoesSemanal, x='dataApresentacao', y='quantidade_proposicoes', x_label='Semana de Apresentação', y_label='Proposições', width='stretch')
-
-# Gráfico 2: Proposições por Tipo (Projeto de Lei, Medida Provisória ou Proposta de Emenda à Constituição)
-st.subheader('2. Quantidade de proposições apresentadas de acordo com o tipo de proposição')
-
-df_tipo = df_plot['descricaoTipo'].value_counts().reset_index()
-df_tipo.columns = ['Tipo de Proposição', 'Quantidade']
-
-st.write('\n\n') # Pulando duas linhas
-
-st.bar_chart(df_tipo, x='Tipo de Proposição', y='Quantidade', x_label='Tipo de Proposição', y_label='Proposições', width='stretch')
-
-# Gráfico 3: Proposição por Partido (em um período de 7 dias)
-with st.spinner('Consolidando informações sobre os partidos políticos dos autores de cada proposição...'):
-    dataFinal = dataInicio + timedelta(days=7) # Em benefício do tempo, utilizamos um período mais curto (7 dias)
-
-    df_proposicoesPeriodo2 = df_proposicoes[(df_proposicoes['dataApresentacao'] >= dataInicio) & (df_proposicoes['dataApresentacao'] <= dataFinal)]
-    
-    df_plot2 = df_proposicoesPeriodo2.copy()
-    df_plot2['dataApresentacao'] = pd.to_datetime(df_plot2['dataApresentacao'])
-
-    res = urlopen('https://dadosabertos.camara.leg.br/api/v2/deputados')
-    data = json.loads(res.read().decode('utf-8'))
-    df_deputados = pd.DataFrame(data['dados'])
-    
-    dadosAutores = []
-
-    for index, value in df_plot2.iterrows():
-        proposicao_id = value['id']
-        
-        res = urlopen(f"https://dadosabertos.camara.leg.br/api/v2/proposicoes/{proposicao_id}/autores")    
-        data = json.loads(res.read().decode('utf-8'))
-
-        dadosAutores.append({'proposicao_id': proposicao_id, 'nome': data['dados'][0]['nome']})
-        
-    df_autores = pd.DataFrame(dadosAutores)
-    df_autores = pd.merge(df_autores, df_deputados[['nome', 'siglaPartido', 'siglaUf']], on='nome', how='left')
-    df_autores = df_autores[['proposicao_id', 'nome', 'siglaPartido', 'siglaUf']]
-    df_autores = df_autores.rename(columns={'proposicao_id': 'proposicaoId'})
-
-st.subheader('3. Quantidade de proposições apresentadas por partido político')
-
-df_partido = df_autores['siglaPartido'].value_counts().reset_index()
-df_partido.columns = ['Partido Político', 'Quantidade']
-
-st.write('\n\n') # Pulando duas linhas
-
-st.bar_chart(df_partido, x='Partido Político', y='Quantidade', x_label='Partido Político', y_label='Proposições', width='stretch')
-
-
-st.write(f"*Nota: em benefício do tempo, utiliza-se um período mais curto (7 dias): {dataInicio} - {dataFinal}*")
-
+# Implementando a verificação da existência de proposições para o período selecionado
+if df_proposicoesPeriodo.empty == True:
+    st.write('Não foram encontradas proposiçõs para os filtros selecionados!')
+    st.write('Isso pode ocorrer, por exemplo, quando o período pesquisado coincide com o recesso parlamentar, que se inicia no dia 23 de dezembro de cada ano e se encerra no dia 02 de fevereiro do ano seguinte.')
+    st.write('Por favor, tente alterar o marco inicial da pesquisa.')
+else:
+   # Construindo a visualização dos gráficos
+   st.write('Com base nos filtros selecionados, é possível consolidar as seguintes informações:')
+   
+   # Gráfico 1: Proposições por Semana
+   st.subheader('1. Quantidade de proposições apresentadas a cada semana')
+   
+   df_plot = df_proposicoesPeriodo.copy()
+   
+   df_plot['dataApresentacao'] = pd.to_datetime(df_plot['dataApresentacao'])
+   df_temp = df_plot.set_index('dataApresentacao')
+   df_proposicoesSemanal = df_temp.resample('1W').size().reset_index(name='quantidade_proposicoes') # Aqui, a contagem é realizada semanalmente
+   
+   st.write('\n\n') # Pulando duas linhas
+   
+   # Gráfico de linhas
+   st.line_chart(df_proposicoesSemanal, x='dataApresentacao', y='quantidade_proposicoes', x_label='Semana de Apresentação', y_label='Proposições', width='stretch')
+   
+   # Gráfico 2: Proposições por Tipo (Projeto de Lei, Medida Provisória ou Proposta de Emenda à Constituição)
+   st.subheader('2. Quantidade de proposições apresentadas de acordo com o tipo de proposição')
+   
+   df_tipo = df_plot['descricaoTipo'].value_counts().reset_index()
+   df_tipo.columns = ['Tipo de Proposição', 'Quantidade']
+   
+   st.write('\n\n') # Pulando duas linhas
+   
+   st.bar_chart(df_tipo, x='Tipo de Proposição', y='Quantidade', x_label='Tipo de Proposição', y_label='Proposições', width='stretch')
+   
+   # Gráfico 3: Proposição por Partido (em um período de 7 dias)
+   with st.spinner('Consolidando informações sobre os partidos políticos dos autores de cada proposição...'):
+       dataFinal = dataInicio + timedelta(days=7) # Em benefício do tempo, utilizamos um período mais curto (7 dias)
+   
+       df_proposicoesPeriodo2 = df_proposicoes[(df_proposicoes['dataApresentacao'] >= dataInicio) & (df_proposicoes['dataApresentacao'] <= dataFinal)]
+       
+       df_plot2 = df_proposicoesPeriodo2.copy()
+       df_plot2['dataApresentacao'] = pd.to_datetime(df_plot2['dataApresentacao'])
+   
+       res = urlopen('https://dadosabertos.camara.leg.br/api/v2/deputados')
+       data = json.loads(res.read().decode('utf-8'))
+       df_deputados = pd.DataFrame(data['dados'])
+       
+       dadosAutores = []
+   
+       for index, value in df_plot2.iterrows():
+           proposicao_id = value['id']
+           
+           res = urlopen(f"https://dadosabertos.camara.leg.br/api/v2/proposicoes/{proposicao_id}/autores")    
+           data = json.loads(res.read().decode('utf-8'))
+   
+           dadosAutores.append({'proposicao_id': proposicao_id, 'nome': data['dados'][0]['nome']})
+           
+       df_autores = pd.DataFrame(dadosAutores)
+       df_autores = pd.merge(df_autores, df_deputados[['nome', 'siglaPartido', 'siglaUf']], on='nome', how='left')
+       df_autores = df_autores[['proposicao_id', 'nome', 'siglaPartido', 'siglaUf']]
+       df_autores = df_autores.rename(columns={'proposicao_id': 'proposicaoId'})
+   
+   st.subheader('3. Quantidade de proposições apresentadas por partido político')
+   
+   df_partido = df_autores['siglaPartido'].value_counts().reset_index()
+   df_partido.columns = ['Partido Político', 'Quantidade']
+   
+   st.write('\n\n') # Pulando duas linhas
+   
+   st.bar_chart(df_partido, x='Partido Político', y='Quantidade', x_label='Partido Político', y_label='Proposições', width='stretch')
+   
+   
+   st.write(f"*Nota: em benefício do tempo, utiliza-se um período mais curto (7 dias): {dataInicio} - {dataFinal}*")
+   
+   

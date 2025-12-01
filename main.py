@@ -6,12 +6,12 @@ import pandas as pd
 from datetime import date, timedelta
 import streamlit as st
 
-# CSS Injection para alterar a cor de fundo do warning
+# CSS Injection para personalizar o warning utilizado mais à frente
 st.markdown("""
 <style>
 .st-emotion-cache-1warn {
-   background-color=#FFC7CE;
-   color=#9C0006
+   background-color: #FFC7CE;
+   color: #9C0006;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -144,6 +144,7 @@ else:
    st.write(f"*Nota: em benefício do tempo, utiliza-se um período mais curto (7 dias): {dataInicio} - {dataFinal}*")
    
    
+
 
 
 

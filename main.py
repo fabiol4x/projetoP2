@@ -6,6 +6,16 @@ import pandas as pd
 from datetime import date, timedelta
 import streamlit as st
 
+# CSS Injection para alterar a cor de fundo do warning
+st.markdown("""
+<style>
+.st-emotion-cache-1warn {
+   background-color=#FFC7CE;
+   color=#9C0006
+}
+</style>
+""", unsafe_allow_html=True)
+
 # Título da página
 st.title('Proposições - Câmara dos Deputados')
 
@@ -64,7 +74,6 @@ with st.spinner('Filtrando informações com base no período selecionado...'):
 
 # Implementando a verificação da existência de proposições para o período selecionado
 if df_proposicoesPeriodo.empty == True:
-   st.markdown('<style>.st-emotion-cache-1warn{background-color=#FFC7CE;color=#9C0006}</style>', unsafe_allow_html=True) # CSS Injection para alterar a cor de fundo do warning
    st.warning('Não foram encontradas proposições para os filtros selecionados! Isso pode ocorrer, por exemplo, quando o período pesquisado coincide com o recesso parlamentar, que se inicia no dia 23 de dezembro de cada ano e se encerra no dia 02 de fevereiro do ano seguinte. Por favor, tente alterar o marco inicial da pesquisa.', icon="⚠️")
 else:
    # Construindo a visualização dos gráficos
@@ -135,6 +144,7 @@ else:
    st.write(f"*Nota: em benefício do tempo, utiliza-se um período mais curto (7 dias): {dataInicio} - {dataFinal}*")
    
    
+
 
 
 

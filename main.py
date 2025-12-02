@@ -69,7 +69,7 @@ dataInicio = st.date_input(
 
 dataFim = dataInicio + timedelta(days=30) # Período de 30 dias
 
-st.write(f"Desse modo, foi definido o seguinte período de busca: {dataInicio} - {dataFim}")
+st.write(f"Desse modo, foi definido o seguinte período de busca: {dataInicio.strftime('%d/%m/%Y')} - {dataFim.strftime('%d/%m/%Y')}")
 
 # Aplicando o novo filtro
 with st.spinner('Filtrando informações com base no período selecionado...'):
@@ -147,6 +147,7 @@ else:
    st.write(f"*Nota: em benefício do tempo, utiliza-se um período mais curto (7 dias): {dataInicio.strftime('%d/%m/%Y')} - {dataFinal.strftime('%d/%m/%Y')}*")
    
    
+
 
 
 

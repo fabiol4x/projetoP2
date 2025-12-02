@@ -63,12 +63,13 @@ dataInicio = st.date_input(
         "Selecione a data inicial da busca:",
         value = date(int(anoBusca), 3, 1), # Devido ao recesso do Poder Legislativo, por padrão, colocamos a dataInicio em março
         min_value = date(int(anoBusca), 1, 1),
-        max_value = date(int(anoBusca), 12, 1)
+        max_value = date(int(anoBusca), 12, 1),
+        format = 'DD/MM/YYYY'
     )
 
 dataFim = dataInicio + timedelta(days=30) # Período de 30 dias
 
-st.write(f"Desse modo, foi definido o seguinte período de busca: {dataInicio.strftime('%d/%m/%Y')} - {dataFim.strftime('%d/%m/%Y')}")
+st.write(f"Desse modo, foi definido o seguinte período de busca: {dataInicio} - {dataFim}")
 
 # Aplicando o novo filtro
 with st.spinner('Filtrando informações com base no período selecionado...'):
@@ -146,6 +147,7 @@ else:
    st.write(f"*Nota: em benefício do tempo, utiliza-se um período mais curto (7 dias): {dataInicio.strftime('%d/%m/%Y')} - {dataFinal.strftime('%d/%m/%Y')}*")
    
    
+
 
 
 
